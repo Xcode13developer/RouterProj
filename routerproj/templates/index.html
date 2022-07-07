@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Cellular Information</title>
+    <!-- Pointer events polyfill for old browsers, see https://caniuse.com/#feat=pointer -->
+    <script src="https://unpkg.com/elm-pep@1.0.6/dist/elm-pep.js"></script>
+    <!-- The lines below are only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=fetch,requestAnimationFrame,Element.prototype.classList,TextDecoder"></script>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.18.3/minified.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+  <body>
+    <h1>Cellular Information</h1>
+    <div id="parentDiv" style="background-color: #fff; width: fit-content; margin: 0 auto; margin-top: 50px;">
+        <div id="chart_div" style="padding-right: 25px;"></div>
+        <div id="map" class="map" style="width: 600px; height: 500px; padding-left: 25px;"></div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <script src="{% static 'index.js' %}"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['line', 'corechart']});
+     google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var button = document.getElementById('change-chart');
+      var chartDiv = document.getElementById('chart_div');
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'Time(Minutes)');
+      data.addColumn('number', "RSSI");
+      data.addColumn('number', "RSRP");
+      data.addRows({{ points }});
+
+      var materialOptions = {
+        "title": 'RSSI and RSRP',
+        curveType: 'function',
+        width: 600,
+        height: 600,
+      };
+
+
+      function drawMaterialChart() {
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, materialOptions);
+      }
+
+
+
+      drawMaterialChart();
+
+    }
+    </script>
+
+
+    <script type="text/javascript">
+            const map = new ol.Map({
+            controls: ol.control.defaults({
+                attributionOptions: {
+                    collapsible: false
+                }
+            }),
+            layers: [
+                new ol.layer.Tile({
+                source: new ol.source.OSM(),
+                }),
+            ],
+            target: 'map',
+            view: new ol.View({
+                center: ol.proj.fromLonLat([4.35247, 50.84673]),
+                maxZoom: 18,
+                zoom: 15,
+            }),
+            });
+
+            var layer = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    features: [
+                        new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([4.35247, 50.84673]))
+                        })
+                    ]
+                })
+            });
+            map.addLayer(layer);
+
+    </script>
+  </body>
+</html>

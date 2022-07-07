@@ -1,0 +1,26 @@
+
+  #map:focus {
+    outline: #4A74A8 solid 0.15em;
+  }
+
+  body {
+    background-image: url("background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 3em;
+    font-weight: 300;
+    color: #fff;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+
+  #parentDiv {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
