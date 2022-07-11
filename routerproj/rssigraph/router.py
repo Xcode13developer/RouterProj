@@ -30,10 +30,11 @@ def getData():
     point.save()
     print(RSSI, RSRP)
 
-@background
+@background(schedule=1)
 def store():
     while True:
         getData()
+        sleep(10)
 
-
+store()
  
